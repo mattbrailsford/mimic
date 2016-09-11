@@ -13,6 +13,7 @@ namespace Mimic.Services
 
         private string _sitemapPath;
         private string _viewModelsPath;
+        private bool _rebuildingModelsCache;
 
         public MimicService(IFileSystem fileSystem, string sitemapPath, string viewModelsPath)
         {
@@ -21,6 +22,8 @@ namespace Mimic.Services
 
             _sitemapPath = sitemapPath;
             _viewModelsPath = viewModelsPath;
+
+            _rebuildingModelsCache = true;
         }
 
         internal void Initialize()
@@ -29,16 +32,25 @@ namespace Mimic.Services
 
             // Rebuild model templates when files change
             _fileSystem.Watch(MimicContext.Current.BasePath, "*.json", () => {
-                LogUtil.Info("Model changed, rebuilding models cache");
-                LoadModelTemplates();
+                LogUtil.Info("Model changed, invalidating models cache");
+                _rebuildingModelsCache = true;
             });
 
             // Trigger and initial model template load
-            LogUtil.Info("Creating models cache");
-            LoadModelTemplates();
+            EnsureModelsCache();
         }
 
-        protected void LoadModelTemplates()
+        protected void EnsureModelsCache()
+        {
+            if (_rebuildingModelsCache)
+            {
+                LogUtil.Info("(Re)building models cache");
+                RebuildModelsCache();
+                _rebuildingModelsCache = false;
+            }
+        }
+
+        protected void RebuildModelsCache()
         {
             // Clear previous models
             _modelsService.ClearModelTemplates();
@@ -75,16 +87,22 @@ namespace Mimic.Services
 
         public bool HasModelTemplate(string templateName)
         {
+            EnsureModelsCache();
+
             return _modelsService.HasModelTemplate(templateName);
         }
 
         public JObject GenerateModel(string templateName, JObject data = null)
         {
+            EnsureModelsCache();
+
             return _modelsService.GenerateModel(templateName, data);
         }
 
         public JObject GetCurrentNodeByUrl(string url, bool updateContext = false)
         {
+            EnsureModelsCache();
+
             var curentNode = MimicContext.Current.Sitemap;
 
             if (!string.IsNullOrWhiteSpace(url))

@@ -3,6 +3,7 @@ using Mimic.Web;
 using Microsoft.Owin.Hosting;
 using Mimic.IO;
 using Mimic.Services;
+using Mimic.Util;
 
 namespace Mimic
 {
@@ -27,14 +28,13 @@ namespace Mimic
                 }
             };
 
+            // Start mimic
             MimicContext.Current.Services.MimicService.Initialize();
-
-            // Setup file watchers on sitemap / models / views?
 
             // Start OWIN host 
             using (WebApp.Start<WebBootstrap>(url: baseUrl))
             {
-                Console.WriteLine("Web API Self hosted on " + baseUrl + " Hit ENTER to exit...");
+                LogUtil.Success("Mimic running at " + baseUrl);
                 Console.ReadLine();
             }
         }
