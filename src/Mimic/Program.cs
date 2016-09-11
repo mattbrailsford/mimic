@@ -32,7 +32,7 @@ namespace Mimic
             MimicContext.Current.Services.MimicService.Initialize();
 
             // Start OWIN host 
-            using (WebApp.Start<WebBootstrap>(url: baseUrl))
+            using (WebApp.Start<WebBootstraper>(url: baseUrl))
             {
                 LogUtil.Success("Mimic running at " + baseUrl);
                 Console.ReadLine();

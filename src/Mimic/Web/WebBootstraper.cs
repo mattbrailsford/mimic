@@ -3,11 +3,10 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Mimic.Web.WebApi;
 using Owin;
-using WebApiContrib.Formatting.Razor;
 
 namespace Mimic.Web
 {
-    public class WebBootstrap
+    public class WebBootstraper
     {
         // This code configures Web API. The Startup class is specified as a type
         // parameter in the WebApp.Start method.
@@ -30,9 +29,7 @@ namespace Mimic.Web
             );
 
             // Register the razor formatter
-            var viewLocator = new RazorViewLocator();
-            var viewParser = new RazorViewParser(new ViewTemplateResolver(viewLocator, MimicContext.Current.BasePath));
-            config.Formatters.Add(new RazorViewFormatter(MimicContext.Current.BasePath, viewLocator, viewParser));
+            config.Formatters.Add(new RazorViewFormatter(MimicContext.Current.BasePath));
 
             // Configure the web api
             appBuilder.UseWebApi(config);

@@ -19,13 +19,13 @@ namespace Mimic.Web.WebApi
 
         public ViewTemplateResolver(IViewLocator viewLocator, string siteRootPath)
         {
-            this._viewLocator = viewLocator;
-            this._siteRootPath = siteRootPath;
+            _viewLocator = viewLocator;
+            _siteRootPath = siteRootPath;
         }
 
         public string Resolve(string name)
         {
-            return this._viewLocator.GetView(this._siteRootPath, new TempView { ViewName = name.Substring(0, name.LastIndexOf(".")) });
+            return _viewLocator.GetView(_siteRootPath, new TempView { ViewName = name.Substring(0, name.LastIndexOf(".", StringComparison.InvariantCulture)) });
         }
 
         internal class TempView: IView

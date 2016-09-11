@@ -40,6 +40,40 @@ namespace Mimic.Services
             EnsureModelsCache();
         }
 
+        public bool HasModelTemplate(string templateName)
+        {
+            EnsureModelsCache();
+
+            return _modelsService.HasModelTemplate(templateName);
+        }
+
+        public JObject GenerateModel(string templateName, JObject data = null)
+        {
+            EnsureModelsCache();
+
+            return _modelsService.GenerateModel(templateName, data);
+        }
+
+        public JObject GetCurrentNodeByUrl(string url, bool updateContext = false)
+        {
+            EnsureModelsCache();
+
+            var curentNode = MimicContext.Current.Sitemap;
+
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                var urlJsonPath = UrlToJsonPath(url);
+                curentNode = (JObject)MimicContext.Current.Sitemap.SelectToken(urlJsonPath);
+            }
+
+            if (updateContext)
+            {
+                MimicContext.Current.CurrentPage = curentNode;
+            }
+
+            return curentNode;
+        }
+
         protected void EnsureModelsCache()
         {
             if (_rebuildingModelsCache)
@@ -83,40 +117,6 @@ namespace Mimic.Services
 
             // Update the sitemap in the mimic context
             MimicContext.Current.Sitemap = sitemap;
-        }
-
-        public bool HasModelTemplate(string templateName)
-        {
-            EnsureModelsCache();
-
-            return _modelsService.HasModelTemplate(templateName);
-        }
-
-        public JObject GenerateModel(string templateName, JObject data = null)
-        {
-            EnsureModelsCache();
-
-            return _modelsService.GenerateModel(templateName, data);
-        }
-
-        public JObject GetCurrentNodeByUrl(string url, bool updateContext = false)
-        {
-            EnsureModelsCache();
-
-            var curentNode = MimicContext.Current.Sitemap;
-
-            if (!string.IsNullOrWhiteSpace(url))
-            {
-                var urlJsonPath = UrlToJsonPath(url);
-                curentNode = (JObject)MimicContext.Current.Sitemap.SelectToken(urlJsonPath);
-            }
-
-            if (updateContext)
-            {
-                MimicContext.Current.CurrentPage = curentNode;
-            }
-
-            return curentNode;
         }
 
         protected void PopulateSitemapUrls(JContainer container, string path = "")
