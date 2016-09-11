@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
-using Mimic.Web.Razor;
+using Mimic.Web.WebApi;
 using Owin;
 using WebApiContrib.Formatting.Razor;
 

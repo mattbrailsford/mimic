@@ -124,6 +124,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MimicService.cs" />
     <Compile Include="Services\ModelsService.cs" />
+    <Compile Include="Util\LogUtil.cs" />
     <Compile Include="Web\Controllers\MimicController.cs" />
     <Compile Include="Web\WebApi\MimicViewLocator.cs" />
     <Compile Include="Web\WebApi\ViewTemplateResolver.cs" />

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Mimic.Extensions;
 using Mimic.IO;
+using Mimic.Util;
 using Newtonsoft.Json.Linq;
 
 namespace Mimic.Services
@@ -24,10 +25,16 @@ namespace Mimic.Services
 
         internal void Initialize()
         {
+            LogUtil.Info("Initializing mimic");
+
             // Rebuild model templates when files change
-            _fileSystem.Watch(MimicContext.Current.BasePath, "*.json", LoadModelTemplates);
+            _fileSystem.Watch(MimicContext.Current.BasePath, "*.json", () => {
+                LogUtil.Info("Model changed, rebuilding models cache");
+                LoadModelTemplates();
+            });
 
             // Trigger and initial model template load
+            LogUtil.Info("Creating models cache");
             LoadModelTemplates();
         }
 
