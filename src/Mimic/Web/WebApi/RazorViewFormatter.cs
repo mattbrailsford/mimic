@@ -14,7 +14,7 @@ namespace Mimic.Web.WebApi
                         viewLocator ?? new RazorViewLocator(), 
                         siteRootPath
                     ),
-                    null
+                    typeof(RazorViewPage)
                 )
             )
         { }

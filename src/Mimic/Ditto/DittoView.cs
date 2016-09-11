@@ -1,12 +1,12 @@
 ﻿using System;
 using Mimic;
 using Mimic.Web.ViewModels;
+using Mimic.Web.WebApi;
 using Newtonsoft.Json.Linq;
-using RazorEngine.Templating;
 
 namespace Our.Umbraco.Ditto
 {
-    public class DittoView<TModel> : TemplateBase
+    public class DittoView<TModel> : RazorViewPage
     {
         private DittoViewModel _model;
 
@@ -18,6 +18,11 @@ namespace Our.Umbraco.Ditto
         {
             get
             {
+                if (_model == null)
+                {
+                    GenerateModel();
+                }
+
                 return _model;
             }
             set
@@ -26,29 +31,34 @@ namespace Our.Umbraco.Ditto
                 {
                     _model = new DittoViewModel(value);
                 }
-                else if (value is JObject)
+                else if (value is JObject || value is DittoViewModel)
                 {
-                    // We won't actually instatiate the TModel type as we are just using
-                    // it as a means to located the correct ViewModel json file. As MimicViewModel
-                    // is a dynamic object, it can handle all property requests so no need to 
-                    // instantiate the class explicitly.
-
-                    // Get the mode type name
-                    var modelTypeName = typeof(TModel).Name;
-
-                    // Look for a template in Handlebars service with same name as model
-                    if(!MimicContext.Current.Services.MimicService.HasModelTemplate(modelTypeName))
-                        throw new ApplicationException("No ViewModel file found with the name " + modelTypeName + ".json");
-
-                    var jsonModel = MimicContext.Current.Services.MimicService.GenerateModel(modelTypeName, MimicContext.Current.CurrentPage);
-
-                    _model = new DittoViewModel(new MimicViewModel(jsonModel));
+                    GenerateModel();
                 }
                 else
                 {
                     _model = value;
                 }
             }
+        }
+
+        protected void GenerateModel()
+        {
+            // We won't actually instatiate the TModel type as we are just using
+            // it as a means to located the correct ViewModel json file. As MimicViewModel
+            // is a dynamic object, it can handle all property requests so no need to 
+            // instantiate the class explicitly.
+
+            // Get the mode type name
+            var modelTypeName = typeof(TModel).Name;
+
+            // Look for a template in Handlebars service with same name as model
+            if (!MimicContext.Current.Services.MimicService.HasModelTemplate(modelTypeName))
+                throw new ApplicationException("No ViewModel file found with the name " + modelTypeName + ".json");
+
+            var jsonModel = MimicContext.Current.Services.MimicService.GenerateModel(modelTypeName, MimicContext.Current.CurrentPage);
+
+            _model = new DittoViewModel(new MimicViewModel(jsonModel));
         }
     }
 

@@ -104,10 +104,6 @@
       <HintPath>..\packages\WebApiContrib.Formatting.Html.2.0.0\lib\net45\WebApiContrib.Formatting.Html.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebApiContrib.Formatting.Razor, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebApiContrib.Formatting.Razor.2.3.0.0\lib\net45\WebApiContrib.Formatting.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ditto\DittoView.cs" />
@@ -127,10 +123,14 @@
     <Compile Include="Util\LogUtil.cs" />
     <Compile Include="Web\Controllers\MimicController.cs" />
     <Compile Include="Web\WebApi\MimicViewLocator.cs" />
+    <Compile Include="Web\WebApi\RazorViewFormatter.cs" />
+    <Compile Include="Web\WebApi\RazorViewLocator.cs" />
+    <Compile Include="Web\WebApi\RazorViewPage.cs" />
+    <Compile Include="Web\WebApi\RazorViewParser.cs" />
     <Compile Include="Web\WebApi\ViewTemplateResolver.cs" />
     <Compile Include="Web\ViewModels.cs" />
     <Compile Include="Web\ViewModels\MimicViewModel.cs" />
-    <Compile Include="Web\WebBootstrap.cs" />
+    <Compile Include="Web\WebBootstraper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

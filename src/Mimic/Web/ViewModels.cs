@@ -2,3 +2,4 @@
 
 public class HomePageViewModel { }
 public class LayoutViewModel { }
+public class TestPartialViewModel { }

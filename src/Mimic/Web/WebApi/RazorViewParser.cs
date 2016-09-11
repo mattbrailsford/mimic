@@ -35,14 +35,17 @@ namespace Mimic.Web.WebApi
 
         public byte[] ParseView(IView view, string viewTemplate, Encoding encoding)
         {
-            var parsedView = this.GetParsedView(view, viewTemplate);
+            var parsedView = GetParsedView(view, viewTemplate);
             return encoding.GetBytes(parsedView);
         }
 
         protected string GetParsedView(IView view, string viewTemplate)
         {
-            _templateService.Compile(viewTemplate, view.ModelType, view.ViewName);
-            return _templateService.Run(view.ViewName, view.Model, null);
+            //_templateService.Compile(viewTemplate, view.ModelType, view.ViewName);
+            //return _templateService.Run(view.ViewName, view.Model, null);
+
+            var template = this._templateService.CreateTemplate(viewTemplate, null, view.Model);
+            return this._templateService.Run(template, null);
         }
     }
 }

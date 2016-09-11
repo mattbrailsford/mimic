@@ -25,7 +25,13 @@ namespace Mimic.Web.WebApi
 
         public string Resolve(string name)
         {
-            return _viewLocator.GetView(_siteRootPath, new TempView { ViewName = name.Substring(0, name.LastIndexOf(".", StringComparison.InvariantCulture)) });
+            // Remove the file extension if there is one
+            if (name.Contains("."))
+            {
+                name = name.Substring(0, name.LastIndexOf(".", StringComparison.InvariantCulture));
+            }
+
+            return _viewLocator.GetView(_siteRootPath, new TempView { ViewName = name });
         }
 
         internal class TempView: IView
