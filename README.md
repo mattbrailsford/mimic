@@ -7,6 +7,6 @@ Standalone razor / json based web server for designers
 - [ ] Create view models on the fly
 - [ ] Create YSOD screen for when errors occur
 - [ ] Setup better error messages
-- [ ] Fix issues with razor engine not locating layouts relatively
+- [x] Fix issues with razor engine not locating layouts relatively (workaround applied)
 - [ ] Test razor implementation
 - [ ] Create standard helper methods
