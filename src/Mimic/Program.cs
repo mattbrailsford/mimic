@@ -27,7 +27,7 @@ namespace Mimic
                 }
             };
 
-            MimicContext.Current.Services.MimicService.LoadModelTemplates();
+            MimicContext.Current.Services.MimicService.Initialize();
 
             // Setup file watchers on sitemap / models / views?
 

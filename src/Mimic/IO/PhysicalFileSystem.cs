@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Mimic.IO
@@ -6,6 +7,7 @@ namespace Mimic.IO
     public class PhysicalFileSystem : IFileSystem
     {
         private string _basePath;
+        private FileSystemWatcher _fileSystemWatcher;
 
         public PhysicalFileSystem(string basePath)
         {
@@ -48,6 +50,20 @@ namespace Mimic.IO
         public string MakeAbsolutePath(string relativePath)
         {
             return relativePath.Replace("~", _basePath.TrimEnd('/'));
+        }
+
+        public void Watch(string path, string filter, Action callback)
+        {
+            _fileSystemWatcher = new FileSystemWatcher(path, filter)
+            {
+                IncludeSubdirectories = true,
+                EnableRaisingEvents = true
+            };
+            _fileSystemWatcher.Created += (sender, args) => callback();
+            _fileSystemWatcher.Changed += (sender, args) => callback();
+            _fileSystemWatcher.Renamed += (sender, args) => callback();
+            _fileSystemWatcher.Deleted += (sender, args) => callback();
+            _fileSystemWatcher.Error += (sender, args) => Watch(path, filter, callback);
         }
     }
 }

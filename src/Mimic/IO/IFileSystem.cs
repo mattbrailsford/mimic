@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Mimic.IO
 {
@@ -17,5 +18,7 @@ namespace Mimic.IO
         string GetFileNameWithoutExtension(string path);
 
         string MakeAbsolutePath(string relativePath);
+
+        void Watch(string path, string filter, Action callback);
     }
 }

@@ -10,3 +10,4 @@ Standalone razor / json based web server for designers
 - [x] Fix issues with razor engine not locating layouts relatively (workaround applied)
 - [ ] Test razor implementation
 - [ ] Create standard helper methods
+- [ ] Add partials support

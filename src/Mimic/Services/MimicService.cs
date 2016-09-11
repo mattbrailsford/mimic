@@ -22,7 +22,16 @@ namespace Mimic.Services
             _viewModelsPath = viewModelsPath;
         }
 
-        internal void LoadModelTemplates()
+        internal void Initialize()
+        {
+            // Rebuild model templates when files change
+            _fileSystem.Watch(MimicContext.Current.BasePath, "*.json", LoadModelTemplates);
+
+            // Trigger and initial model template load
+            LoadModelTemplates();
+        }
+
+        protected void LoadModelTemplates()
         {
             // Clear previous models
             _modelsService.ClearModelTemplates();

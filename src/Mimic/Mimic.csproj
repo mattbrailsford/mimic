@@ -125,7 +125,8 @@
     <Compile Include="Services\MimicService.cs" />
     <Compile Include="Services\ModelsService.cs" />
     <Compile Include="Web\Controllers\MimicController.cs" />
-    <Compile Include="Web\Razor\MimicTemplateResolver.cs" />
+    <Compile Include="Web\WebApi\MimicViewLocator.cs" />
+    <Compile Include="Web\WebApi\ViewTemplateResolver.cs" />
     <Compile Include="Web\ViewModels.cs" />
     <Compile Include="Web\ViewModels\MimicViewModel.cs" />
     <Compile Include="Web\WebBootstrap.cs" />

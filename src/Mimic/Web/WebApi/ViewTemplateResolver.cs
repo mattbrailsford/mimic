@@ -2,7 +2,7 @@
 using RazorEngine.Templating;
 using WebApiContrib.Formatting.Html;
 
-namespace Mimic.Web.Razor
+namespace Mimic.Web.WebApi
 {
     /// <summary>
     /// The standard TemplateResovler doesn't look for view in the views folder
@@ -19,13 +19,13 @@ namespace Mimic.Web.Razor
 
         public ViewTemplateResolver(IViewLocator viewLocator, string siteRootPath)
         {
-            _viewLocator = viewLocator;
-            _siteRootPath = siteRootPath;
+            this._viewLocator = viewLocator;
+            this._siteRootPath = siteRootPath;
         }
 
         public string Resolve(string name)
         {
-            return _viewLocator.GetView(this._siteRootPath, new TempView { ViewName = name.Substring(0, name.LastIndexOf(".")) });
+            return this._viewLocator.GetView(this._siteRootPath, new TempView { ViewName = name.Substring(0, name.LastIndexOf(".")) });
         }
 
         internal class TempView: IView
