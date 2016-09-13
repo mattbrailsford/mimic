@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
+using RazorEngine.Compilation;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using WebApiContrib.Formatting.Html;
@@ -8,30 +11,20 @@ namespace Mimic.Web.WebApi
 {
     public class RazorViewParser : IViewParser
     {
-        private readonly ITemplateService _templateService;
+        private readonly IRazorEngineService _razorEngineService;
 
-        public RazorViewParser(ITemplateService templateService)
+        public RazorViewParser(IViewLocator viewLocator, string basePath)
         {
-            if (templateService == null)
-                throw new ArgumentNullException(nameof(templateService));
-
-            _templateService = templateService;
+            _razorEngineService = RazorEngineService.Create(new TemplateServiceConfiguration
+            {
+                BaseTemplateType = typeof(RazorViewPage),
+                TemplateManager = new ViewTemplateManager(viewLocator, basePath),
+                ReferenceResolver = new MimicReferenceResolver(),
+                DisableTempFileLocking = true,
+                CachingProvider = new DefaultCachingProvider(t => { }), // Disable warnings
+                CompilerServiceFactory = new MimicCompilerServiceFactory() // Override default temp folder
+            });
         }
-
-        public RazorViewParser(ITemplateServiceConfiguration config)
-        {
-            if (config == null)
-                throw new ArgumentNullException(nameof(config));
-
-            _templateService = new TemplateService(config);
-        }
-
-        public RazorViewParser(ITemplateResolver resolver, Type baseTemplateType)
-          : this(new TemplateServiceConfiguration {
-              BaseTemplateType = baseTemplateType,
-              Resolver = resolver 
-          })
-        { }
 
         public byte[] ParseView(IView view, string viewTemplate, Encoding encoding)
         {
@@ -41,11 +34,11 @@ namespace Mimic.Web.WebApi
 
         protected string GetParsedView(IView view, string viewTemplate)
         {
-            //_templateService.Compile(viewTemplate, view.ModelType, view.ViewName);
-            //return _templateService.Run(view.ViewName, view.Model, null);
+            _razorEngineService.Compile(viewTemplate, view.ViewName);
 
-            var template = this._templateService.CreateTemplate(viewTemplate, null, view.Model);
-            return this._templateService.Run(template, null);
+            var dynamicModel = RazorDynamicObject.Create(view.Model);
+
+            return _razorEngineService.Run(view.ViewName, null, dynamicModel);
         }
     }
 }

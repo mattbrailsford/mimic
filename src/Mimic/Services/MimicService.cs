@@ -10,6 +10,7 @@ namespace Mimic.Services
     {
         private IFileSystem _fileSystem;
         private ModelsService _modelsService;
+        private TypeBuilderService _typeBuilderService;
 
         private string _sitemapPath;
         private string _viewModelsPath;
@@ -19,6 +20,7 @@ namespace Mimic.Services
         {
             _fileSystem = fileSystem;
             _modelsService = new ModelsService();
+            _typeBuilderService = new TypeBuilderService();
 
             _sitemapPath = sitemapPath;
             _viewModelsPath = viewModelsPath;
@@ -35,6 +37,9 @@ namespace Mimic.Services
                 LogUtil.Info("Model changed, invalidating models cache");
                 _rebuildingModelsCache = true;
             });
+
+            // Cleanup from previous run
+            _typeBuilderService.CleanupTempFolder();
 
             // Trigger and initial model template load
             EnsureModelsCache();
@@ -102,7 +107,7 @@ namespace Mimic.Services
             PopulateSitemapUrls(sitemap);
 
             // Get list of view models templates
-            var templates = _fileSystem.GetFiles(_viewModelsPath);
+            var templates = _fileSystem.GetFiles(_viewModelsPath).ToArray();
 
             // Load up the templates
             foreach (var template in templates)
@@ -110,10 +115,11 @@ namespace Mimic.Services
                 var name = _fileSystem.GetFileNameWithoutExtension(template).MakeAliasSafe();
                 var json = _fileSystem.GetFileContents(template);
 
-                //TODO: Generate in member model classes
-
                 _modelsService.RegisterModelTemplate(name, json, sitemap);
             }
+
+            // Build the types
+            _typeBuilderService.DeclareTypes(templates.Select(x => _fileSystem.GetFileNameWithoutExtension(x).ToPascalCase()));
 
             // Update the sitemap in the mimic context
             MimicContext.Current.Sitemap = sitemap;

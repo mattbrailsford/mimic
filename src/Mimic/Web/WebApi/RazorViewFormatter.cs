@@ -1,4 +1,5 @@
-﻿using WebApiContrib.Formatting.Html;
+﻿using RazorEngine.Templating;
+using WebApiContrib.Formatting.Html;
 using WebApiContrib.Formatting.Html.Formatting;
 
 namespace Mimic.Web.WebApi
@@ -9,13 +10,7 @@ namespace Mimic.Web.WebApi
           : base(
                 siteRootPath, 
                 viewLocator ?? new RazorViewLocator(), 
-                viewParser ?? new RazorViewParser(
-                    new ViewTemplateResolver(
-                        viewLocator ?? new RazorViewLocator(), 
-                        siteRootPath
-                    ),
-                    typeof(RazorViewPage)
-                )
+                viewParser ?? new RazorViewParser(viewLocator ?? new RazorViewLocator(), siteRootPath)
             )
         { }
     }
